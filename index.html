@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pricing Plans</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="pricing-shell">
+      <section class="pricing-header">
+        <p class="eyebrow">Pricing</p>
+        <h1>Choose the plan that fits your workflow.</h1>
+        <p>
+          Choose the plan that best suits your needs and start building your
+          projects today. Upgrade or downgrade anytime as your needs evolve.
+        </p>
+      </section>
+
+      <section
+        aria-labelledby="pricing-heading"
+        class="plan-grid"
+        role="radiogroup"
+      >
+        <article
+          class="plan-card selected"
+          data-plan="starter"
+          role="radio"
+          aria-checked="true"
+          tabindex="0"
+        >
+          <div class="plan-top">
+            <div>
+              <p class="plan-name">Starter</p>
+              <p>Best for individual creators and portfolio sites.</p>
+            </div>
+            <span class="plan-badge">Popular</span>
+          </div>
+          <p class="price">
+            $12<span style="font-size: 0.75em; color: var(--muted)">/mo</span>
+          </p>
+          <div class="plan-details">
+            <p class="feature">Up to 10 projects</p>
+            <p class="feature">Email support</p>
+            <p class="feature">Analytics dashboard</p>
+          </div>
+          <div class="plan-action">
+            <button class="plan-button" type="button">Select Starter</button>
+          </div>
+        </article>
+
+        <article
+          class="plan-card"
+          data-plan="growth"
+          role="radio"
+          aria-checked="false"
+          tabindex="-1"
+        >
+          <div class="plan-top">
+            <div>
+              <p class="plan-name">Growth</p>
+              <p>Designed for small teams that need more scale.</p>
+            </div>
+            <span class="plan-badge">New</span>
+          </div>
+          <p class="price">
+            $28<span style="font-size: 0.75em; color: var(--muted)">/mo</span>
+          </p>
+          <div class="plan-details">
+            <p class="feature">Unlimited projects</p>
+            <p class="feature">Priority email support</p>
+            <p class="feature">Team collaboration tools</p>
+          </div>
+          <div class="plan-action">
+            <button class="plan-button" type="button">Select Growth</button>
+          </div>
+        </article>
+
+        <article
+          class="plan-card"
+          data-plan="enterprise"
+          role="radio"
+          aria-checked="false"
+          tabindex="-1"
+        >
+          <div class="plan-top">
+            <div>
+              <p class="plan-name">Enterprise</p>
+              <p>
+                Advanced features and dedicated support for larger businesses.
+              </p>
+            </div>
+            <span class="plan-badge">Advanced</span>
+          </div>
+          <p class="price">
+            $68<span style="font-size: 0.75em; color: var(--muted)">/mo</span>
+          </p>
+          <div class="plan-details">
+            <p class="feature">Custom onboarding</p>
+            <p class="feature">SLA & 24/7 support</p>
+            <p class="feature">Advanced security</p>
+          </div>
+          <div class="plan-action">
+            <button class="plan-button" type="button">Select Enterprise</button>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <script>
+      const cards = document.querySelectorAll(".plan-card");
+      function selectCard(card) {
+        cards.forEach((item) => {
+          const isSelected = item === card;
+          item.classList.toggle("selected", isSelected);
+          item.setAttribute("aria-checked", isSelected);
+          item.tabIndex = isSelected ? 0 : -1;
+        });
+        card.querySelector(".plan-button").focus({ preventScroll: true });
+      }
+
+      cards.forEach((card) => {
+        const button = card.querySelector(".plan-button");
+
+        card.addEventListener("click", () => selectCard(card));
+
+        button.addEventListener("click", (event) => {
+          event.preventDefault();
+          selectCard(card);
+        });
+      });
+    </script>
+  </body>
+</html>

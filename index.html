@@ -121,13 +121,7 @@
 
       cards.forEach((card) => {
         const button = card.querySelector(".plan-button");
-
         card.addEventListener("click", () => selectCard(card));
-
-        button.addEventListener("click", (event) => {
-          event.preventDefault();
-          selectCard(card);
-        });
       });
     </script>
   </body>

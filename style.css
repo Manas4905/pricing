@@ -336,7 +336,6 @@ body {
   text-align: center;
 }
 
-/* ── Action Button ── */
 .plan-action {
   margin-top: 2rem;
   display: grid;
@@ -369,7 +368,6 @@ body {
   color: #0f172a;
 }
 
-/* ── Billing Note ── */
 .billing-note {
   text-align: center;
   color: var(--muted);
@@ -391,7 +389,6 @@ body {
   border: 0;
 }
 
-/* ── Responsive ── */
 @media (max-width: 1000px) {
   .plan-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));

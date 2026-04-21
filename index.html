@@ -17,11 +17,28 @@
         </p>
       </section>
 
+      <!-- Billing Toggle -->
+      <div class="billing-toggle-wrap" role="group" aria-label="Billing period">
+        <button class="toggle-btn active" data-period="monthly" type="button">
+          1 Month
+        </button>
+        <button class="toggle-btn" data-period="yearly" type="button">
+          1 Year
+          <span class="toggle-badge" data-discount="yearly">Save 20%</span>
+        </button>
+        <button class="toggle-btn" data-period="biennial" type="button">
+          2 Years
+          <span class="toggle-badge" data-discount="biennial">Save 35%</span>
+        </button>
+        <span class="toggle-slider" aria-hidden="true"></span>
+      </div>
+
       <section
         aria-labelledby="pricing-heading"
         class="plan-grid"
         role="radiogroup"
       >
+        <!-- Starter -->
         <article
           class="plan-card selected"
           data-plan="starter"
@@ -36,9 +53,21 @@
             </div>
             <span class="plan-badge">Popular</span>
           </div>
-          <p class="price">
-            $12<span style="font-size: 0.75em; color: var(--muted)">/mo</span>
-          </p>
+
+          <div class="price-block">
+            <p class="price">
+              <span
+                class="price-amount"
+                data-monthly="12"
+                data-yearly="9.60"
+                data-biennial="7.80"
+                >$12</span
+              ><span class="price-period">/mo</span>
+            </p>
+            <p class="compare-price" aria-live="polite"></p>
+            <span class="discount-badge" aria-live="polite"></span>
+          </div>
+
           <div class="plan-details">
             <p class="feature">Up to 10 projects</p>
             <p class="feature">Email support</p>
@@ -49,6 +78,7 @@
           </div>
         </article>
 
+        <!-- Growth -->
         <article
           class="plan-card"
           data-plan="growth"
@@ -63,9 +93,21 @@
             </div>
             <span class="plan-badge">New</span>
           </div>
-          <p class="price">
-            $28<span style="font-size: 0.75em; color: var(--muted)">/mo</span>
-          </p>
+
+          <div class="price-block">
+            <p class="price">
+              <span
+                class="price-amount"
+                data-monthly="28"
+                data-yearly="22.40"
+                data-biennial="18.20"
+                >$28</span
+              ><span class="price-period">/mo</span>
+            </p>
+            <p class="compare-price" aria-live="polite"></p>
+            <span class="discount-badge" aria-live="polite"></span>
+          </div>
+
           <div class="plan-details">
             <p class="feature">Unlimited projects</p>
             <p class="feature">Priority email support</p>
@@ -76,6 +118,7 @@
           </div>
         </article>
 
+        <!-- Enterprise -->
         <article
           class="plan-card"
           data-plan="enterprise"
@@ -92,9 +135,21 @@
             </div>
             <span class="plan-badge">Advanced</span>
           </div>
-          <p class="price">
-            $63<span style="font-size: 0.75em; color: var(--muted)">/mo</span>
-          </p>
+
+          <div class="price-block">
+            <p class="price">
+              <span
+                class="price-amount"
+                data-monthly="63"
+                data-yearly="50.40"
+                data-biennial="40.95"
+                >$63</span
+              ><span class="price-period">/mo</span>
+            </p>
+            <p class="compare-price" aria-live="polite"></p>
+            <span class="discount-badge" aria-live="polite"></span>
+          </div>
+
           <div class="plan-details">
             <p class="feature">Custom onboarding</p>
             <p class="feature">SLA & 24/7 support</p>
@@ -105,9 +160,14 @@
           </div>
         </article>
       </section>
+
+      <p class="billing-note" aria-live="polite" id="billing-note">
+        Billed monthly. Cancel anytime.
+      </p>
     </main>
 
     <script>
+      /* ── Card selection ── */
       const cards = document.querySelectorAll(".plan-card");
       function selectCard(card) {
         cards.forEach((item) => {
@@ -118,10 +178,107 @@
         });
         card.querySelector(".plan-button").focus({ preventScroll: true });
       }
-
       cards.forEach((card) => {
-        const button = card.querySelector(".plan-button");
         card.addEventListener("click", () => selectCard(card));
+      });
+
+      /* ── Billing period toggle ── */
+      const toggleBtns = document.querySelectorAll(".toggle-btn");
+      const slider = document.querySelector(".toggle-slider");
+      const billingNote = document.getElementById("billing-note");
+
+      const periodConfig = {
+        monthly: {
+          key: "monthly",
+          label: "monthly",
+          discountPct: 0,
+          note: "Billed monthly. Cancel anytime.",
+        },
+        yearly: {
+          key: "yearly",
+          label: "yearly",
+          discountPct: 20,
+          note: "Billed annually. That's 2 months free!",
+        },
+        biennial: {
+          key: "biennial",
+          label: "biennial",
+          discountPct: 35,
+          note: "Billed every 2 years. Maximum savings!",
+        },
+      };
+
+      let currentPeriod = "monthly";
+
+      function moveslider(btn) {
+        const wrap = btn.parentElement;
+        const wrapRect = wrap.getBoundingClientRect();
+        const btnRect = btn.getBoundingClientRect();
+        slider.style.width = btnRect.width + "px";
+        slider.style.height = btnRect.height + "px";
+        slider.style.left = btnRect.left - wrapRect.left + "px";
+      }
+
+      function updatePrices(period) {
+        const cfg = periodConfig[period];
+        document.querySelectorAll(".price-amount").forEach((el) => {
+          const monthly = parseFloat(el.dataset.monthly);
+          const newPrice = parseFloat(el.dataset[period]);
+          const formatted =
+            newPrice % 1 === 0 ? `$${newPrice}` : `$${newPrice.toFixed(2)}`;
+
+          // Animate price flip
+          el.classList.add("price-flip");
+          setTimeout(() => {
+            el.textContent = formatted;
+            el.classList.remove("price-flip");
+          }, 180);
+
+          const compareEl = el
+            .closest(".price-block")
+            .querySelector(".compare-price");
+          const badgeEl = el
+            .closest(".price-block")
+            .querySelector(".discount-badge");
+
+          if (cfg.discountPct > 0) {
+            compareEl.textContent = `was $${monthly}/mo`;
+            compareEl.classList.add("visible");
+            badgeEl.textContent = `−${cfg.discountPct}%`;
+            badgeEl.className = `discount-badge visible tier-${cfg.discountPct}`;
+          } else {
+            compareEl.textContent = "";
+            compareEl.classList.remove("visible");
+            badgeEl.textContent = "";
+            badgeEl.className = "discount-badge";
+          }
+        });
+
+        billingNote.textContent = cfg.note;
+      }
+
+      function selectPeriod(btn) {
+        const period = btn.dataset.period;
+        if (period === currentPeriod) return;
+        currentPeriod = period;
+
+        toggleBtns.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        moveslider(btn);
+        updatePrices(period);
+      }
+
+      toggleBtns.forEach((btn) => {
+        btn.addEventListener("click", () => selectPeriod(btn));
+      });
+
+      // Init slider position on load
+      window.addEventListener("load", () => {
+        moveslider(document.querySelector(".toggle-btn.active"));
+      });
+      // Re-position on resize
+      window.addEventListener("resize", () => {
+        moveslider(document.querySelector(".toggle-btn.active"));
       });
     </script>
   </body>

@@ -38,7 +38,7 @@ body {
   display: grid;
   place-items: center;
   padding-top: 1rem;
-  padding-bottom: 1.5rem;
+  padding-bottom: 2rem;
 }
 
 .pricing-shell {
@@ -47,6 +47,7 @@ body {
   gap: 1.75rem;
 }
 
+/* ── Header ── */
 .pricing-header {
   text-align: center;
   max-width: 740px;
@@ -74,6 +75,86 @@ body {
   font-size: 1rem;
 }
 
+/* ── Billing Toggle ── */
+.billing-toggle-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(20, 33, 61, 0.85);
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  padding: 5px;
+  gap: 2px;
+  position: relative;
+  width: fit-content;
+  margin: 0 auto;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+}
+
+.toggle-slider {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  border-radius: 99px;
+  transition:
+    left 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+    width 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 12px rgba(56, 189, 248, 0.35);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.toggle-btn {
+  position: relative;
+  z-index: 1;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  padding: 0.55rem 1.35rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 99px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+  font-family: inherit;
+}
+
+.toggle-btn.active {
+  color: #0f172a;
+}
+
+.toggle-btn:not(.active):hover {
+  color: var(--text);
+}
+
+/* Small pill badge inside the toggle button */
+.toggle-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  background: rgba(56, 189, 248, 0.15);
+  color: var(--accent-strong);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 99px;
+  padding: 0.15rem 0.5rem;
+  letter-spacing: 0.02em;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+
+.toggle-btn.active .toggle-badge {
+  background: rgba(15, 23, 42, 0.25);
+  color: #0f172a;
+  border-color: rgba(15, 23, 42, 0.2);
+}
+
+/* ── Plan Grid ── */
 .plan-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(300px, 1fr));
@@ -105,7 +186,7 @@ body {
   border-color: rgba(96, 165, 250, 0.5);
 }
 
-.plan-card .selected {
+.plan-card.selected {
   border-color: rgba(56, 189, 248, 0.85);
   background:
     radial-gradient(circle at top, rgba(56, 189, 248, 0.15), transparent 40%),
@@ -135,6 +216,7 @@ body {
   padding: 0.4rem 0.75rem;
   font-size: 0.8rem;
   font-weight: 600;
+  flex-shrink: 0;
 }
 
 .plan-card .plan-top p:nth-of-type(2) {
@@ -142,12 +224,95 @@ body {
   margin: 0.4rem 0 0;
 }
 
+/* ── Price Block ── */
+.price-block {
+  position: relative;
+  margin-bottom: 0.25rem;
+}
+
 .price {
   margin: 0;
   font-size: clamp(2rem, 4vw, 3rem);
   line-height: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 0.15rem;
 }
 
+.price-period {
+  font-size: 0.75em;
+  color: var(--muted);
+}
+
+/* Price flip animation */
+.price-amount {
+  display: inline-block;
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
+}
+
+.price-amount.price-flip {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
+/* Compare / strikethrough price */
+.compare-price {
+  margin: 0.35rem 0 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+  text-decoration: line-through;
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+  transition:
+    opacity 0.3s ease,
+    height 0.3s ease;
+}
+
+.compare-price.visible {
+  opacity: 1;
+  height: 1.4em;
+}
+
+/* Floating discount badge */
+.discount-badge {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 0.45rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 99px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  opacity: 0;
+  transform: scale(0.8);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+  pointer-events: none;
+}
+
+.discount-badge.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Tier colours: green tones escalating with savings */
+.discount-badge.tier-20 {
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #4ade80;
+}
+
+.discount-badge.tier-35 {
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  color: #4ade80;
+}
+
+/* ── Features ── */
 .plan-details {
   margin: 1.5rem 0 0;
   display: grid;
@@ -171,6 +336,7 @@ body {
   text-align: center;
 }
 
+/* ── Action Button ── */
 .plan-action {
   margin-top: 2rem;
   display: grid;
@@ -188,6 +354,7 @@ body {
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
+  font-family: inherit;
 }
 
 .plan-button:hover,
@@ -202,6 +369,16 @@ body {
   color: #0f172a;
 }
 
+/* ── Billing Note ── */
+.billing-note {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0;
+  transition: opacity 0.2s ease;
+}
+
+/* ── Accessibility ── */
 .screen-reader-only {
   position: absolute;
   width: 1px;
@@ -214,9 +391,30 @@ body {
   border: 0;
 }
 
+/* ── Responsive ── */
 @media (max-width: 1000px) {
   .plan-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .billing-toggle-wrap {
+    flex-wrap: wrap;
+    border-radius: 1.25rem;
+    width: 90%;
+  }
+  .toggle-slider {
+    display: none;
+  }
+  .toggle-btn {
+    flex: 1 1 auto;
+    justify-content: center;
+    border-radius: 0.85rem;
+  }
+  .toggle-btn.active {
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+    color: #0f172a;
   }
 }
 

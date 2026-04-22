@@ -62,10 +62,11 @@
                 data-yearly="9.60"
                 data-biennial="7.80"
                 >$12</span
-              ><span class="price-period">/mo</span>
+              ><span class="price-period price-period-label">/mo</span>
             </p>
             <p class="compare-price" aria-live="polite"></p>
             <span class="discount-badge" aria-live="polite"></span>
+            <p class="per-month-note" aria-live="polite"></p>
           </div>
 
           <div class="plan-details">
@@ -102,10 +103,11 @@
                 data-yearly="22.40"
                 data-biennial="18.20"
                 >$28</span
-              ><span class="price-period">/mo</span>
+              ><span class="price-period price-period-label">/mo</span>
             </p>
             <p class="compare-price" aria-live="polite"></p>
             <span class="discount-badge" aria-live="polite"></span>
+            <p class="per-month-note" aria-live="polite"></p>
           </div>
 
           <div class="plan-details">
@@ -129,9 +131,7 @@
           <div class="plan-top">
             <div>
               <p class="plan-name">Enterprise</p>
-              <p>
-                Advanced features and dedicated support for larger businesses.
-              </p>
+              <p>Advanced features, dedicated support for larger businesses.</p>
             </div>
             <span class="plan-badge">Advanced</span>
           </div>
@@ -144,10 +144,11 @@
                 data-yearly="50.40"
                 data-biennial="40.95"
                 >$63</span
-              ><span class="price-period">/mo</span>
+              ><span class="price-period price-period-label">/mo</span>
             </p>
             <p class="compare-price" aria-live="polite"></p>
             <span class="discount-badge" aria-live="polite"></span>
+            <p class="per-month-note" aria-live="polite"></p>
           </div>
 
           <div class="plan-details">
@@ -219,39 +220,58 @@
         slider.style.left = btnRect.left - wrapRect.left + "px";
       }
 
+      function fmt(val) {
+        return val % 1 === 0 ? `$${val}` : `$${val.toFixed(2)}`;
+      }
+
       function updatePrices(period) {
         const cfg = periodConfig[period];
+        const months =
+          period === "yearly" ? 12 : period === "biennial" ? 24 : 1;
+
         document.querySelectorAll(".price-amount").forEach((el) => {
           const monthly = parseFloat(el.dataset.monthly);
-          const newPrice = parseFloat(el.dataset[period]);
-          const formatted =
-            newPrice % 1 === 0 ? `$${newPrice}` : `$${newPrice.toFixed(2)}`;
+          const discountedMonthly = parseFloat(el.dataset[period]);
+          const block = el.closest(".price-block");
+          const compareEl = block.querySelector(".compare-price");
+          const badgeEl = block.querySelector(".discount-badge");
+          const perMonthEl = block.querySelector(".per-month-note");
+          const periodLabel = block.querySelector(".price-period-label");
 
           // Animate price flip
           el.classList.add("price-flip");
           setTimeout(() => {
-            el.textContent = formatted;
+            if (period === "monthly") {
+              // Show per-month price as usual
+              el.textContent = fmt(monthly);
+              periodLabel.textContent = "/mo";
+              compareEl.textContent = "";
+              compareEl.classList.remove("visible");
+              badgeEl.textContent = "";
+              badgeEl.className = "discount-badge";
+              perMonthEl.textContent = "";
+              perMonthEl.classList.remove("visible");
+            } else {
+              // Show total for the period
+              const total = discountedMonthly * months;
+              const fullTotal = monthly * months;
+              el.textContent = fmt(total);
+              periodLabel.textContent = period === "yearly" ? "/yr" : "/2 yrs";
+
+              // Strikethrough: what full price would be for same period
+              compareEl.textContent = `was ${fmt(fullTotal)}`;
+              compareEl.classList.add("visible");
+
+              // Discount badge
+              badgeEl.textContent = `−${cfg.discountPct}%`;
+              badgeEl.className = `discount-badge visible tier-${cfg.discountPct}`;
+
+              // Per-month breakdown
+              perMonthEl.textContent = `${fmt(discountedMonthly)}/mo`;
+              perMonthEl.classList.add("visible");
+            }
             el.classList.remove("price-flip");
           }, 180);
-
-          const compareEl = el
-            .closest(".price-block")
-            .querySelector(".compare-price");
-          const badgeEl = el
-            .closest(".price-block")
-            .querySelector(".discount-badge");
-
-          if (cfg.discountPct > 0) {
-            compareEl.textContent = `was $${monthly}/mo`;
-            compareEl.classList.add("visible");
-            badgeEl.textContent = `−${cfg.discountPct}%`;
-            badgeEl.className = `discount-badge visible tier-${cfg.discountPct}`;
-          } else {
-            compareEl.textContent = "";
-            compareEl.classList.remove("visible");
-            badgeEl.textContent = "";
-            badgeEl.className = "discount-badge";
-          }
         });
 
         billingNote.textContent = cfg.note;

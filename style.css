@@ -428,7 +428,7 @@ body {
     background: linear-gradient(135deg, #38bdf8, #0ea5e9);
     color: #0f172a;
   }
-  .plan-card {
+  .pricing-shell {
     margin-right: 1rem;
   }
 }
@@ -445,5 +445,8 @@ body {
   }
   .plan-card {
     padding: 1.6rem;
+  }
+  .pricing-shell {
+    padding-right: 1rem;
   }
 }

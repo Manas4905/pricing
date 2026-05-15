@@ -20,7 +20,6 @@
 html,
 body {
   margin: 0;
-  min-height: 100%;
 }
 
 body {
@@ -422,7 +421,7 @@ body {
     color: #0f172a;
   }
   .pricing-shell {
-    margin-right: 1rem;
+    margin-right: 1.2rem;
   }
 }
 
@@ -431,12 +430,9 @@ body {
     font-size: 2.25rem;
   }
   .plan-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 0.95fr;
   }
   .plan-card {
-    padding: 1.6rem;
-  }
-  .pricing-shell {
-    padding-right: 1rem;
+    padding: 1rem;
   }
 }

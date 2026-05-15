@@ -39,10 +39,13 @@ body {
   place-items: center;
   padding-top: 1rem;
   padding-bottom: 2rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 .pricing-shell {
-  width: 90%;
+  width: min(90%, 1120px);
+  max-width: 1120px;
   display: grid;
   gap: 1.75rem;
 }
@@ -118,7 +121,6 @@ body {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  white-space: nowrap;
   transition: color 0.2s ease;
   font-family: inherit;
 }
@@ -402,7 +404,6 @@ body {
   margin: -1px;
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
   border: 0;
 }
 
@@ -410,26 +411,30 @@ body {
   .toggle-slider {
     display: none;
   }
+  .billing-toggle-wrap {
+    border-radius: 2rem;
+  }
   .toggle-btn {
+    width: 100%;
     flex: 1 1 auto;
     justify-content: center;
-    border-radius: 0.85rem;
+    border-radius: 0.8rem;
+    text-align: center;
+    padding: 0.75rem 1rem;
   }
   .toggle-btn.active {
     background: linear-gradient(135deg, #38bdf8, #0ea5e9);
     color: #0f172a;
+    border-radius: 1.8rem;
   }
   .pricing-shell {
-    margin-right: 1.2rem;
+    width: 100%;
   }
-}
-
-@media (max-width: 640px) {
   .pricing-header h1 {
     font-size: 2.25rem;
   }
   .plan-grid {
-    grid-template-columns: 0.95fr;
+    grid-template-columns: 1fr;
   }
   .plan-card {
     padding: 1rem;
